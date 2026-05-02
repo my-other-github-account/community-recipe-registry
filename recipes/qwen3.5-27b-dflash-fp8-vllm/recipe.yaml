@@ -7,10 +7,8 @@ metadata:
   description: |
     Qwen3.5-27B FP8 with DFlash speculative decoding (drafter z-lab/Qwen3.5-27B-DFlash, num_speculative_tokens=15).
     First spec-decode entry on the spark-arena leaderboard.
-    Demonstrates 6.14x peak speedup over BF16 autoregressive at d=0 c=1, geomean 4.53x at c=1 across 7 depths.
-    REQUIRES the included llama-benchy patch (patches/llama-benchy-spec-decode-fix) — without it, spec-decode
-    throughput is reported at ~5.51 tok/s instead of the real ~25 tok/s due to a SSE-chunk-counting bug in
-    llama-benchy <= 0.3.5 that has silently affected every prior spec-decode submission.
+    6.14x peak speedup over BF16 autoregressive at d=0 c=1; geomean 4.53x at c=1 across 7 depths.
+    Requires llama-benchy >= 0.3.6 (per-chunk token_ids — earlier versions undercount spec-decode tok/s by ~5x).
   maintainer: "@banana_baeee"
   model_params: 27B
   model_dtype: fp8
@@ -36,13 +34,6 @@ env:
   FLASHINFER_CUDA_ARCH_LIST: "12.1a"
   VLLM_USE_FLASHINFER_MOE_FP4: "0"
   PYTORCH_CUDA_ALLOC_CONF: "expandable_segments:True"
-
-post_commands:
-  # Apply the llama-benchy SSE-chunk-counting fix to the user's uvx cache before benchmarking.
-  # Without this, spec-decode throughput is reported at ~5.51 tok/s instead of ~25 tok/s.
-  # The patcher is idempotent — safe to re-run.
-  # See patches/llama-benchy-spec-decode-fix/README.md for full explanation and before/after numbers.
-  - "python3 patches/llama-benchy-spec-decode-fix/patch_llama_benchy.py"
 
 command: |
   vllm serve {model} \
