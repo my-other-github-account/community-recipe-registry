@@ -12,7 +12,7 @@ Server startup ~16 min. Full ladder ~7 hours.
 
 ## Results
 
-`tg128` aggregate tok/s (sum across concurrent requests). Single DGX Spark GB10, 122 GiB unified memory. Default `llama-benchy 0.3.7`.
+`tg128` aggregate tok/s (sum across concurrent requests). Single DGX Spark GB10, 122 GiB unified memory.
 
 | depth | c=1 | c=2 | c=5 | c=10 |
 |---:|---:|---:|---:|---:|
@@ -24,11 +24,8 @@ Server startup ~16 min. Full ladder ~7 hours.
 | 65535 | 13.08 | 5.64 | 1.88 | 1.55 |
 | 100000 | 8.11 | 2.24 | 1.09 | _pending_ |
 
-Per-cell JSON in `results/cell-d{depth}-c{concurrency}.json`.
-
 ## Pitfalls
 
-- `llama-benchy ≤ 0.3.5` undercounts spec-decode tok/s ~5×. Use `0.3.6+`.
 - Read `tg_throughput.mean` from result JSONs — not `peak_throughput`.
 - Depth labels are GPT-2 tokens (llama-benchy fallback when served-model-name isn't an HF id). Output throughput is in true Qwen tokens.
 
