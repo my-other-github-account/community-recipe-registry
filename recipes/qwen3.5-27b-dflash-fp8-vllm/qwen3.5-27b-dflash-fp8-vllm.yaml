@@ -1,7 +1,7 @@
 recipe_version: "2"
 model: Qwen/Qwen3.5-27B-FP8
 runtime: vllm
-container: ghcr.io/spark-arena/dgx-vllm-eugr-nightly:latest
+container: ghcr.io/spark-arena/dgx-vllm-eugr-nightly@sha256:7758869bb489d93a4658d009554f598f18bbef0d07bbc38df49bf586a1874279
 
 metadata:
   description: |
@@ -35,7 +35,6 @@ env:
 
 command: |
   vllm serve {model} \
-    --served-model-name qwen35-27b \
     --host {host} --port {port} \
     --tensor-parallel-size {tensor_parallel} \
     --gpu-memory-utilization {gpu_memory_utilization} \
